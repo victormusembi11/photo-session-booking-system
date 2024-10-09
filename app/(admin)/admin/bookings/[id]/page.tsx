@@ -2,6 +2,7 @@
 
 import { useQuery } from "@tanstack/react-query";
 import { useParams } from "next/navigation";
+import { Box, Heading, Text, VStack, Divider, Spinner, Alert, AlertIcon } from "@chakra-ui/react";
 
 import CreateAlbumForm from "@/components/create-album-modal-form";
 import Album from "@/components/photo-album";
@@ -13,33 +14,55 @@ export default function Booking() {
     queryFn: () => fetchBookingById(Array.isArray(id) ? id[0] : id),
   });
 
-  if (isLoading) return <div>Loading...</div>;
-  if (isError) return <div>Error: {error instanceof Error ? error.message : "An error occurred"}</div>;
+  if (isLoading) return <Spinner size="lg" />;
+  if (isError) {
+    return (
+      <Alert status="error" mb={4}>
+        <AlertIcon />
+        Error: {error instanceof Error ? error.message : "An error occurred"}
+      </Alert>
+    );
+  }
 
   const booking = data?.booking;
   const firstAlbum = booking?.Album?.[0];
 
-  console.log(booking);
-
   return (
-    <div>
-      <h1>Booking Details</h1>
-      <p>Booking ID: {booking?.id}</p>
-      <p>Status: {booking?.status}</p>
-      <p>Description: {booking?.description}</p>
-      <p>Booking Date: {new Date(booking?.bookingDate).toLocaleDateString()}</p>
+    <VStack spacing={4} align="start" p={4}>
+      <Heading as="h1" size="lg">
+        Booking Details
+      </Heading>
+      <Divider />
 
-      <h2>User Details</h2>
-      <p>User ID: {booking?.user?.id}</p>
-      <p>
-        Name: {booking?.user?.firstName} {booking?.user?.lastName}
-      </p>
-      <p>Email: {booking?.user?.email}</p>
+      <Box p={4} bg="gray.50" borderRadius="md" shadow="md" width="100%">
+        <Text fontSize="lg" fontWeight="bold">
+          Booking ID: {booking?.id}
+        </Text>
+        <Text>Status: {booking?.status}</Text>
+        <Text>Description: {booking?.description}</Text>
+        <Text>Booking Date: {new Date(booking?.bookingDate).toLocaleDateString()}</Text>
+      </Box>
 
-      <CreateAlbumForm bookingId={booking?.id} userId={booking?.user?.id} />
+      <Heading as="h2" size="md" mt={6}>
+        User Details
+      </Heading>
+      <Box p={4} bg="gray.50" borderRadius="md" shadow="md" width="100%">
+        <Text>User ID: {booking?.user?.id}</Text>
+        <Text>
+          Name: {booking?.user?.firstName} {booking?.user?.lastName}
+        </Text>
+        <Text>Email: {booking?.user?.email}</Text>
+      </Box>
 
-      {firstAlbum ? <Album albumId={firstAlbum.id} /> : <p>No album available for this booking.</p>}
-    </div>
+      {firstAlbum ? (
+        <Album albumId={firstAlbum.id} />
+      ) : (
+        <>
+          <CreateAlbumForm bookingId={booking?.id} userId={booking?.user?.id} />
+          <Text>No album available for this booking.</Text>
+        </>
+      )}
+    </VStack>
   );
 }
 
