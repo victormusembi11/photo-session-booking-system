@@ -1,7 +1,9 @@
 "use client";
 
 import { useQuery } from "@tanstack/react-query";
-import { Button, Box, Text, Flex, Spinner, Image } from "@chakra-ui/react";
+import { Box, Text, Flex, Spinner, Image } from "@chakra-ui/react";
+
+import PhotoUploadModal from "./upload-photo-form";
 
 interface AlbumProps {
   albumId: string;
@@ -32,7 +34,7 @@ const Album = ({ albumId }: AlbumProps) => {
         <Text fontSize="lg" fontWeight="bold">
           Album: {data.album.albumName}
         </Text>
-        <Button colorScheme="blue">Add Photo</Button>
+        <PhotoUploadModal albumId={albumId} />
       </Flex>
 
       <Box>
