@@ -16,7 +16,7 @@ export async function GET(req: Request, { params }: { params: { id: string } }) 
     });
 
     if (bookings.length === 0) {
-      return NextResponse.json({ message: "No bookings found for this user" }, { status: 404 });
+      return NextResponse.json({}, { status: 200 });
     }
 
     return NextResponse.json({ bookings }, { status: 200 });
