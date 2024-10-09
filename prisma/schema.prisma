@@ -21,6 +21,7 @@ model User {
   lastName  String?
   role      Role      @default(USER)
   Booking   Booking[]
+  Album     Album[]
 }
 
 enum Role {
@@ -36,7 +37,8 @@ model Booking {
   status      BookingStatus @default(PENDING)
   description String?
 
-  user User @relation(fields: [userId], references: [id])
+  user  User    @relation(fields: [userId], references: [id])
+  Album Album[]
 
   @@map("booking")
 }
@@ -46,4 +48,17 @@ enum BookingStatus {
   CONFIRMED
   PENDING
   CANCELED
+}
+
+model Album {
+  id            Int     @id @default(autoincrement())
+  userId        Int
+  bookingId     Int
+  albumName     String  @db.VarChar(100)
+  visibleToUser Boolean @default(true)
+
+  user    User    @relation(fields: [userId], references: [id])
+  booking Booking @relation(fields: [bookingId], references: [id])
+
+  @@map("album")
 }
