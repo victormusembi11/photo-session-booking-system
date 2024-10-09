@@ -25,7 +25,7 @@ export default function Booking() {
   }
 
   const booking = data?.booking;
-  const firstAlbum = booking?.Album?.[0];
+  const album = booking?.album;
 
   return (
     <VStack spacing={4} align="start" p={4}>
@@ -54,12 +54,17 @@ export default function Booking() {
         <Text>Email: {booking?.user?.email}</Text>
       </Box>
 
-      {firstAlbum ? (
-        <Album albumId={firstAlbum.id} />
+      {album ? (
+        <Box mt={6}>
+          <Heading as="h2" size="md">
+            Album: {album.albumName}
+          </Heading>
+          <Album albumId={album.id} />
+        </Box>
       ) : (
         <>
+          <Text>No albums available for this booking.</Text>
           <CreateAlbumForm bookingId={booking?.id} userId={booking?.user?.id} />
-          <Text>No album available for this booking.</Text>
         </>
       )}
     </VStack>
