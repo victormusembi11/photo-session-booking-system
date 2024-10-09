@@ -38,7 +38,7 @@ model Booking {
   description String?
 
   user  User   @relation(fields: [userId], references: [id])
-  Album Album?
+  album Album?
 
   @@map("booking")
 }
