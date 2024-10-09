@@ -23,7 +23,7 @@ const BookingTable: React.FC<BookingTableProps> = ({ bookings }) => {
   const router = useRouter();
 
   const handleViewMore = (bookingId: number) => {
-    router.push(`/admin/bookings/${bookingId}`);
+    router.push(`/client/bookings/${bookingId}`);
   };
 
   return (
