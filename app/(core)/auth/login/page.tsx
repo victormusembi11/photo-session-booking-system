@@ -22,7 +22,7 @@ const Login = () => {
         duration: 5000,
         isClosable: true,
       });
-      router.push("/admin");
+      router.push("/admin/bookings");
     } else {
       toast({
         title: "Login failed",
