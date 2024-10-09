@@ -14,16 +14,36 @@ datasource db {
 }
 
 model User {
-  id        Int     @id @default(autoincrement())
-  email     String  @unique
+  id        Int       @id @default(autoincrement())
+  email     String    @unique
   password  String
   firstName String?
   lastName  String?
-  role      Role    @default(USER)
+  role      Role      @default(USER)
+  Booking   Booking[]
 }
 
 enum Role {
   USER
   ADMIN
   PHOTOGRAPHER
+}
+
+model Booking {
+  id          Int           @id @default(autoincrement())
+  userId      Int
+  bookingDate DateTime
+  status      BookingStatus @default(PENDING)
+  description String?
+
+  user User @relation(fields: [userId], references: [id])
+
+  @@map("booking")
+}
+
+enum BookingStatus {
+  COMPLETED
+  CONFIRMED
+  PENDING
+  CANCELED
 }
