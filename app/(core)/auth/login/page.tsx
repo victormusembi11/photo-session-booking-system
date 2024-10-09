@@ -13,6 +13,8 @@ const Login = () => {
   const handleLogin = () => {
     const user = JSON.parse(localStorage.getItem("user") as string);
     if (user && user.email === email && user.password === password) {
+      localStorage.setItem("loggedin", JSON.stringify({ email, password }));
+
       toast({
         title: "Login successful!",
         description: "You have been successfully logged in.",
