@@ -10,6 +10,7 @@ export async function GET(req: Request, { params }: { params: { id: string } }) 
       include: {
         user: true,
         booking: true,
+        Photo: true,
       },
     });
 
