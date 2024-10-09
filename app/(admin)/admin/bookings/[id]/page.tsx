@@ -3,6 +3,8 @@
 import { useQuery } from "@tanstack/react-query";
 import { useParams } from "next/navigation";
 
+import CreateAlbumForm from "@/components/create-album-modal-form";
+
 export default function Booking() {
   const { id } = useParams();
   const { data, isLoading, isError, error } = useQuery({
@@ -29,6 +31,8 @@ export default function Booking() {
         Name: {booking?.user?.firstName} {booking?.user?.lastName}
       </p>
       <p>Email: {booking?.user?.email}</p>
+
+      <CreateAlbumForm bookingId={booking?.id} userId={booking?.user?.id} />
     </div>
   );
 }
