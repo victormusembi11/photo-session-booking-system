@@ -33,6 +33,8 @@ export default function Bookings() {
     );
   }
 
+  const bookings = data?.bookings || [];
+
   return (
     <Box maxW="5xl" mx="auto" p={6}>
       <VStack spacing={8} align="stretch">
@@ -46,7 +48,11 @@ export default function Bookings() {
           <BookingForm userId={1} />
         </Box>
         <Box>
-          <BookingTable bookings={data.bookings} />
+          {bookings.length === 0 ? (
+            <Text textAlign="center">No bookings available</Text>
+          ) : (
+            <BookingTable bookings={bookings} />
+          )}
         </Box>
       </VStack>
     </Box>
