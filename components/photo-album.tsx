@@ -1,8 +1,7 @@
 "use client";
 
 import { useQuery } from "@tanstack/react-query";
-import { Box, Text, Flex, Spinner, Image } from "@chakra-ui/react";
-
+import { Box, Text, Flex, Spinner, Image, Alert, AlertIcon, SimpleGrid } from "@chakra-ui/react";
 import PhotoUploadModal from "./upload-photo-form";
 
 interface AlbumProps {
@@ -23,31 +22,37 @@ const Album = ({ albumId }: AlbumProps) => {
     queryFn: () => fetchAlbumById(albumId),
   });
 
-  if (isLoading) return <Spinner />;
-  if (isError) return <Text>Error: {error instanceof Error ? error.message : "An error occurred"}</Text>;
+  if (isLoading) return <Spinner size="lg" />;
 
-  console.log("Album data: ", data);
+  if (isError) {
+    return (
+      <Alert status="error" mb={4}>
+        <AlertIcon />
+        Error: {error instanceof Error ? error.message : "An error occurred"}
+      </Alert>
+    );
+  }
 
   return (
-    <Box>
-      <Flex justify="space-between" align="center" mb={4} p={4} bg="gray.100">
+    <Box mt={6}>
+      <Flex justify="space-between" align="center" mb={4} p={4} bg="gray.100" borderRadius="md" shadow="md">
         <Text fontSize="lg" fontWeight="bold">
           Album: {data.album.albumName}
         </Text>
         <PhotoUploadModal albumId={albumId} />
       </Flex>
 
-      <Box>
+      <SimpleGrid columns={[1, 2, 3]} spacing={4}>
         {data.album.Photo.length > 0 ? (
           data.album.Photo.map((photo: { id: number; photoUrl: string }) => (
-            <Box key={photo.id} mb={4}>
-              <Image src={photo.photoUrl} alt={`Photo ${photo.id}`} />
+            <Box key={photo.id} borderWidth={1} borderColor="gray.200" borderRadius="md" overflow="hidden">
+              <Image src={photo.photoUrl} alt={`Photo ${photo.id}`} width="100%" height="200px" objectFit="cover" />
             </Box>
           ))
         ) : (
           <Text>No photos available</Text>
         )}
-      </Box>
+      </SimpleGrid>
     </Box>
   );
 };
