@@ -33,7 +33,7 @@ export default function Bookings() {
   }
 
   return (
-    <Box maxW="5xl" mx="auto" p={6}>
+    <Box maxW="100%" mx="auto" p={6}>
       <VStack spacing={8} align="stretch">
         <Heading as="h1" size="xl" textAlign="center" mb={4}>
           Admin Bookings
@@ -42,7 +42,11 @@ export default function Bookings() {
           Welcome to the admin bookings page. Here you can view and manage all bookings.
         </Text>
         <Box>
-          <BookingTable bookings={data.bookings} />
+          {data?.bookings.length > 0 ? (
+            <BookingTable bookings={data.bookings} />
+          ) : (
+            <Text textAlign="center">No bookings available</Text>
+          )}
         </Box>
       </VStack>
     </Box>
