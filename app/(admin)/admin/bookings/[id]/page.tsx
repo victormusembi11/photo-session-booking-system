@@ -4,6 +4,7 @@ import { useQuery } from "@tanstack/react-query";
 import { useParams } from "next/navigation";
 
 import CreateAlbumForm from "@/components/create-album-modal-form";
+import Album from "@/components/photo-album";
 
 export default function Booking() {
   const { id } = useParams();
@@ -16,6 +17,9 @@ export default function Booking() {
   if (isError) return <div>Error: {error instanceof Error ? error.message : "An error occurred"}</div>;
 
   const booking = data?.booking;
+  const firstAlbum = booking?.Album?.[0];
+
+  console.log(booking);
 
   return (
     <div>
@@ -33,6 +37,8 @@ export default function Booking() {
       <p>Email: {booking?.user?.email}</p>
 
       <CreateAlbumForm bookingId={booking?.id} userId={booking?.user?.id} />
+
+      {firstAlbum ? <Album albumId={firstAlbum.id} /> : <p>No album available for this booking.</p>}
     </div>
   );
 }
