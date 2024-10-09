@@ -2,6 +2,7 @@
 
 import { useQuery } from "@tanstack/react-query";
 import BookingTable from "@/components/client-bookings-table";
+import BookingForm from "@/components/create-booking-form";
 
 import axios from "@/lib/axios";
 
@@ -25,7 +26,7 @@ export default function Bookings() {
     <div>
       <h1>Bookings</h1>
       <p>Welcome to the bookings page</p>
-
+      <BookingForm userId={1} /> {/* TODO: Get user ID from session */}
       <BookingTable bookings={data.bookings} />
     </div>
   );
