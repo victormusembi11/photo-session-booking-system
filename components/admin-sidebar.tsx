@@ -14,28 +14,34 @@ import {
   useDisclosure,
   BoxProps,
   FlexProps,
+  Link as ChakraLink, // Import Chakra UI Link
 } from "@chakra-ui/react";
-import { FiHome, FiTrendingUp, FiCompass, FiStar, FiSettings, FiMenu } from "react-icons/fi";
+import { FiSettings, FiMenu } from "react-icons/fi";
 import { IconType } from "react-icons";
 import { ReactText } from "react";
+import { useRouter } from "next/navigation";
 
 interface LinkItemProps {
   name: string;
   icon: IconType;
+  href: string;
 }
-const LinkItems: Array<LinkItemProps> = [
-  { name: "Home", icon: FiHome },
-  { name: "Trending", icon: FiTrendingUp },
-  { name: "Explore", icon: FiCompass },
-  { name: "Favourites", icon: FiStar },
-  { name: "Settings", icon: FiSettings },
-];
+
+const LinkItems: Array<LinkItemProps> = [{ name: "Client Bookings", icon: FiSettings, href: "/admin/bookings" }];
 
 export default function Sidebar({ children }: { children: React.ReactNode }) {
+  const router = useRouter();
   const { isOpen, onOpen, onClose } = useDisclosure();
+
+  const handleLogout = () => {
+    localStorage.removeItem("loggedin");
+    alert("Logged out successfully!");
+    router.push("/auth/login");
+  };
+
   return (
     <Box minH="100vh" bg={useColorModeValue("gray.100", "gray.900")}>
-      <SidebarContent onClose={() => onClose} display={{ base: "none", md: "block" }} />
+      <SidebarContent onClose={() => onClose} display={{ base: "none", md: "block" }} onLogout={handleLogout} />
       <Drawer
         isOpen={isOpen}
         placement="left"
@@ -45,10 +51,9 @@ export default function Sidebar({ children }: { children: React.ReactNode }) {
         size="full"
       >
         <DrawerContent>
-          <SidebarContent onClose={onClose} />
+          <SidebarContent onClose={onClose} onLogout={handleLogout} />
         </DrawerContent>
       </Drawer>
-      {/* mobilenav */}
       <MobileNav display={{ base: "flex", md: "none" }} onOpen={onOpen} />
       <Box ml={{ base: 0, md: 60 }} p="4">
         {children}
@@ -59,9 +64,10 @@ export default function Sidebar({ children }: { children: React.ReactNode }) {
 
 interface SidebarProps extends BoxProps {
   onClose: () => void;
+  onLogout: () => void;
 }
 
-const SidebarContent = ({ onClose, ...rest }: SidebarProps) => {
+const SidebarContent = ({ onClose, onLogout, ...rest }: SidebarProps) => {
   return (
     <Box
       bg={useColorModeValue("white", "gray.900")}
@@ -74,15 +80,18 @@ const SidebarContent = ({ onClose, ...rest }: SidebarProps) => {
     >
       <Flex h="20" alignItems="center" mx="8" justifyContent="space-between">
         <Text fontSize="2xl" fontFamily="monospace" fontWeight="bold">
-          Logo
+          NIT Admin
         </Text>
         <CloseButton display={{ base: "flex", md: "none" }} onClick={onClose} />
       </Flex>
       {LinkItems.map((link) => (
-        <NavItem key={link.name} icon={link.icon}>
+        <NavItem key={link.name} icon={link.icon} href={link.href} onClose={onClose}>
           {link.name}
         </NavItem>
       ))}
+      <Box as="button" onClick={onLogout} width="full" p="4" color="red.500" _hover={{ bg: "red.100" }}>
+        Logout
+      </Box>
     </Box>
   );
 };
@@ -90,10 +99,13 @@ const SidebarContent = ({ onClose, ...rest }: SidebarProps) => {
 interface NavItemProps extends FlexProps {
   icon: IconType;
   children: ReactText;
+  href: string;
+  onClose: () => void;
 }
-const NavItem = ({ icon, children, ...rest }: NavItemProps) => {
+
+const NavItem = ({ icon, children, href, onClose, ...rest }: NavItemProps) => {
   return (
-    <Box as="a" href="#" style={{ textDecoration: "none" }} _focus={{ boxShadow: "none" }}>
+    <ChakraLink as="a" href={href} style={{ textDecoration: "none" }} _focus={{ boxShadow: "none" }}>
       <Flex
         align="center"
         p="4"
@@ -105,6 +117,7 @@ const NavItem = ({ icon, children, ...rest }: NavItemProps) => {
           bg: "cyan.400",
           color: "white",
         }}
+        onClick={onClose}
         {...rest}
       >
         {icon && (
@@ -119,7 +132,7 @@ const NavItem = ({ icon, children, ...rest }: NavItemProps) => {
         )}
         {children}
       </Flex>
-    </Box>
+    </ChakraLink>
   );
 };
 
@@ -142,7 +155,7 @@ const MobileNav = ({ onOpen, ...rest }: MobileProps) => {
       <IconButton variant="outline" onClick={onOpen} aria-label="open menu" icon={<FiMenu />} />
 
       <Text fontSize="2xl" ml="8" fontFamily="monospace" fontWeight="bold">
-        Logo
+        NIT Admin
       </Text>
     </Flex>
   );
