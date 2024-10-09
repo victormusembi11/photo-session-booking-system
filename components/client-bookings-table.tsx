@@ -1,4 +1,5 @@
-import { Table, Thead, Tbody, Tfoot, Tr, Th, Td, TableCaption, TableContainer } from "@chakra-ui/react";
+import { Table, Thead, Tbody, Tfoot, Tr, Th, Td, TableCaption, TableContainer, Button } from "@chakra-ui/react";
+import { useRouter } from "next/navigation";
 
 interface Booking {
   id: number;
@@ -19,6 +20,12 @@ interface BookingTableProps {
 }
 
 const BookingTable: React.FC<BookingTableProps> = ({ bookings }) => {
+  const router = useRouter();
+
+  const handleViewMore = (bookingId: number) => {
+    router.push(`/admin/bookings/${bookingId}`);
+  };
+
   return (
     <TableContainer>
       <Table variant="simple">
@@ -31,6 +38,7 @@ const BookingTable: React.FC<BookingTableProps> = ({ bookings }) => {
             <Th>Description</Th>
             <Th>User Name</Th>
             <Th>User Email</Th>
+            <Th>View More</Th>
           </Tr>
         </Thead>
         <Tbody>
@@ -44,6 +52,11 @@ const BookingTable: React.FC<BookingTableProps> = ({ bookings }) => {
                 {booking.user.firstName} {booking.user.lastName}
               </Td>
               <Td>{booking.user.email}</Td>
+              <Td>
+                <Button colorScheme="blue" size="sm" onClick={() => handleViewMore(booking.id)}>
+                  View More
+                </Button>
+              </Td>
             </Tr>
           ))}
         </Tbody>
@@ -55,6 +68,7 @@ const BookingTable: React.FC<BookingTableProps> = ({ bookings }) => {
             <Th>Description</Th>
             <Th>User Name</Th>
             <Th>User Email</Th>
+            <Th>View More</Th>
           </Tr>
         </Tfoot>
       </Table>
