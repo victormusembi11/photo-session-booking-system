@@ -37,8 +37,8 @@ model Booking {
   status      BookingStatus @default(PENDING)
   description String?
 
-  user  User    @relation(fields: [userId], references: [id])
-  Album Album[]
+  user  User   @relation(fields: [userId], references: [id])
+  Album Album?
 
   @@map("booking")
 }
@@ -53,7 +53,7 @@ enum BookingStatus {
 model Album {
   id            Int     @id @default(autoincrement())
   userId        Int
-  bookingId     Int
+  bookingId     Int     @unique
   albumName     String  @db.VarChar(100)
   visibleToUser Boolean @default(true)
 
