@@ -1,5 +1,7 @@
 import { Table, Thead, Tbody, Tfoot, Tr, Th, Td, TableCaption, TableContainer } from "@chakra-ui/react";
 
+import BookingStatusForm from "@/components/update-status-modal-form";
+
 interface Booking {
   id: number;
   userId: number;
@@ -38,7 +40,10 @@ const BookingTable: React.FC<BookingTableProps> = ({ bookings }) => {
             <Tr key={booking.id}>
               <Td>{booking.id}</Td>
               <Td>{new Date(booking.bookingDate).toLocaleDateString()}</Td>
-              <Td>{booking.status}</Td>
+              <Td>
+                {booking.status}
+                <BookingStatusForm bookingId={booking.id} />
+              </Td>
               <Td>{booking.description}</Td>
               <Td>
                 {booking.user.firstName} {booking.user.lastName}
