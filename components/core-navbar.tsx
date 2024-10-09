@@ -52,10 +52,10 @@ export default function Navbar() {
             </Button>
           ) : (
             <>
-              <Button colorScheme="blue" onClick={() => router.push("/signup")}>
+              <Button colorScheme="blue" onClick={() => router.push("/auth/signup")}>
                 Sign Up
               </Button>
-              <Button colorScheme="blue" onClick={() => router.push("/login")}>
+              <Button colorScheme="blue" onClick={() => router.push("/auth/login")}>
                 Login
               </Button>
             </>
