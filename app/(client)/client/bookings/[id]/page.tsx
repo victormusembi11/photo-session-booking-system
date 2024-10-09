@@ -3,7 +3,7 @@
 import { useQuery } from "@tanstack/react-query";
 import { useParams } from "next/navigation";
 import { Box, Heading, Text, VStack, Divider, Spinner, Alert, AlertIcon } from "@chakra-ui/react";
-import Album from "@/components/photo-album";
+import Album from "@/components/client-photo-album";
 
 export default function Booking() {
   const { id } = useParams();
@@ -23,7 +23,7 @@ export default function Booking() {
   }
 
   const booking = data?.booking;
-  const firstAlbum = booking?.Album?.[0];
+  const album = booking?.album;
 
   return (
     <VStack spacing={4} align="start" p={4}>
@@ -41,8 +41,13 @@ export default function Booking() {
         <Text>Booking Date: {new Date(booking?.bookingDate).toLocaleDateString()}</Text>
       </Box>
 
-      {firstAlbum ? (
-        <Album albumId={firstAlbum.id} />
+      {album ? (
+        <Box mt={6}>
+          <Heading as="h2" size="md">
+            Album: {album.albumName}
+          </Heading>
+          <Album albumId={album.id} />
+        </Box>
       ) : (
         <>
           <Text>No album available for this booking.</Text>
