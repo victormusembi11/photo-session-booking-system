@@ -10,7 +10,7 @@ const Signup = () => {
   const router = useRouter();
 
   const handleSignup = () => {
-    localStorage.setItem("user", JSON.stringify({ email, password }));
+    localStorage.setItem("user", JSON.stringify({ email, password, role: "USER" }));
     router.push("/auth/login");
   };
 
@@ -32,7 +32,7 @@ const Signup = () => {
       </Button>
       <Text mt={4}>
         Already have an account?{" "}
-        <Link href="/login" color="blue.500">
+        <Link href="/auth/login" color="blue.500">
           Login
         </Link>
       </Text>
