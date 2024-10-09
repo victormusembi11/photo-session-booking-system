@@ -13,7 +13,7 @@ const Login = () => {
   const handleLogin = () => {
     const user = JSON.parse(localStorage.getItem("user") as string);
     if (user && user.email === email && user.password === password) {
-      localStorage.setItem("loggedin", JSON.stringify({ email, password }));
+      localStorage.setItem("loggedin", JSON.stringify({ email, password, role: user.role }));
 
       toast({
         title: "Login successful!",
@@ -22,7 +22,12 @@ const Login = () => {
         duration: 5000,
         isClosable: true,
       });
-      router.push("/admin/bookings");
+
+      if (user.role === "ADMIN") {
+        router.push("/admin/bookings");
+      } else if (user.role === "USER" || user.role === "PHOTOGRAPHER") {
+        router.push("/client/bookings");
+      }
     } else {
       toast({
         title: "Login failed",
