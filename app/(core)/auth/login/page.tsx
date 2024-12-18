@@ -10,28 +10,53 @@ const Login = () => {
   const router = useRouter();
   const toast = useToast();
 
-  const handleLogin = () => {
-    const user = JSON.parse(localStorage.getItem("user") as string);
-    if (user && user.email === email && user.password === password) {
-      localStorage.setItem("loggedin", JSON.stringify({ email, password, role: user.role }));
-
-      toast({
-        title: "Login successful!",
-        description: "You have been successfully logged in.",
-        status: "success",
-        duration: 5000,
-        isClosable: true,
+  const handleLogin = async () => {
+    try {
+      const response = await fetch("/api/users/login", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          email,
+          password,
+        }),
       });
 
-      if (user.role === "ADMIN") {
-        router.push("/admin/bookings");
-      } else if (user.role === "USER" || user.role === "PHOTOGRAPHER") {
-        router.push("/client/bookings");
+      if (response.ok) {
+        const data = await response.json();
+        const { user, token } = data;
+
+        // Store token or user information in local storage or cookies as needed
+        localStorage.setItem("loggedin", JSON.stringify({ ...user, token }));
+
+        toast({
+          title: "Login successful!",
+          description: "You have been successfully logged in.",
+          status: "success",
+          duration: 5000,
+          isClosable: true,
+        });
+
+        if (user.role === "ADMIN") {
+          router.push("/admin/bookings");
+        } else if (user.role === "USER" || user.role === "PHOTOGRAPHER") {
+          router.push("/client/bookings");
+        }
+      } else {
+        const errorData = await response.json();
+        toast({
+          title: "Login failed",
+          description: errorData?.message || "Invalid email or password.",
+          status: "error",
+          duration: 5000,
+          isClosable: true,
+        });
       }
-    } else {
+    } catch (error) {
       toast({
         title: "Login failed",
-        description: "Invalid email or password",
+        description: "There was an error during login.",
         status: "error",
         duration: 5000,
         isClosable: true,
