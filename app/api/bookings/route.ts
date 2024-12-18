@@ -7,6 +7,17 @@ export async function POST(req: Request) {
   const { userId, bookingDate, status, description } = await req.json();
 
   try {
+    // Check if the user exists
+    const userExists = await prisma.user.findUnique({
+      where: {
+        id: parseInt(userId),
+      },
+    });
+
+    if (!userExists) {
+      return NextResponse.json({ message: "User not found" }, { status: 404 });
+    }
+
     const newBooking = await prisma.booking.create({
       data: {
         userId: parseInt(userId),
