@@ -1,17 +1,59 @@
 "use client";
 
 import { useState } from "react";
-import { Box, Button, Input, FormControl, FormLabel, Link, Text } from "@chakra-ui/react";
+import { Box, Button, Input, FormControl, FormLabel, Link, Text, useToast } from "@chakra-ui/react";
 import { useRouter } from "next/navigation";
 
 const Signup = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const router = useRouter();
+  const toast = useToast();
 
-  const handleSignup = () => {
-    localStorage.setItem("user", JSON.stringify({ email, password, role: "USER" }));
-    router.push("/auth/login");
+  const handleSignup = async () => {
+    try {
+      const response = await fetch("/api/users", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          email,
+          password,
+          firstName: "",  // Optionally collect first name
+          lastName: "",   // Optionally collect last name
+        }),
+      });
+
+      if (response.ok) {
+        const data = await response.json();
+        toast({
+          title: "Signup successful!",
+          description: "You have been successfully signed up.",
+          status: "success",
+          duration: 5000,
+          isClosable: true,
+        });
+        router.push("/auth/login");
+      } else {
+        const errorData = await response.json();
+        toast({
+          title: "Signup failed",
+          description: errorData?.message || "Something went wrong.",
+          status: "error",
+          duration: 5000,
+          isClosable: true,
+        });
+      }
+    } catch (error) {
+      toast({
+        title: "Signup failed",
+        description: "There was an error during signup.",
+        status: "error",
+        duration: 5000,
+        isClosable: true,
+      });
+    }
   };
 
   return (
